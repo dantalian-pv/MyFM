@@ -38,6 +38,7 @@ background_media = '#ccccff'
 # if os.path.exists('/home/divik/1_MyPO'):
 #     file_config = os.path.join('/home/divik/1_MyPO', file_config)
 
+
 def PrintMyName():
     print('My details:')
     print('divik')
