@@ -391,14 +391,14 @@ class App():
 
         m = magic.Magic(mime=True)
         try:
-           if m.from_file(file_path).startswith('text'):
+            if m.from_file(file_path).startswith('text'):
                 try:
                     lines = open(file_path, 'r').readlines()
                 except:
                     return
                 for line in lines:
                     self.frame02.insert(END, line)
-           elif m.from_file(file_path).startswith('image'):
+            elif m.from_file(file_path).startswith('image'):
                 with open(file_path, 'rb') as f:
                     img = Image.open(f)
                     img_data = 'size:{} format:{} mode:{}'.format(img.size, img.format, img.mode)
