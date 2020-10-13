@@ -175,13 +175,17 @@ class App():
             tab_mtime, tab_atime = self.get_mtime_file(file_path)
             tab_values = [dic_files[file_path][0], os.path.splitext(dic_files[file_path][0])[1], tab_size, tab_mtime, tab_atime]
             m = magic.Magic(mime=True)
-            if m.from_file(file_path).startswith('text'):
-                self.tree.insert('', 'end', values=tab_values, tags=('txt',))
-                self.tree.tag_configure(tagname='txt', background=background_txt)
-            elif m.from_file(file_path).startswith('video') or m.from_file(file_path).startswith('audio'):
-                self.tree.insert('', 'end', values=tab_values, tags=('media',))
-                self.tree.tag_configure(tagname='media', background=background_media)
-            else:
+            try:
+                if m.from_file(file_path).startswith('text'):
+                    self.tree.insert('', 'end', values=tab_values, tags=('txt',))
+                    self.tree.tag_configure(tagname='txt', background=background_txt)
+                elif m.from_file(file_path).startswith('video') or m.from_file(file_path).startswith('audio'):
+                    self.tree.insert('', 'end', values=tab_values, tags=('media',))
+                    self.tree.tag_configure(tagname='media', background=background_media)
+                else:
+                    self.tree.insert('', 'end', values=tab_values, tags=('w',))
+                    self.tree.tag_configure(tagname='w', background=background_with)
+            except:
                 self.tree.insert('', 'end', values=tab_values, tags=('w',))
                 self.tree.tag_configure(tagname='w', background=background_with)
         child_id = self.tree.get_children()[0]
