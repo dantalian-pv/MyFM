@@ -391,10 +391,7 @@ class App():
 
         m = magic.Magic(mime=True)
         try:
-
-            print(m.from_file(file_path))
-
-            if m.from_file(file_path).startswith('text'):
+           if m.from_file(file_path).startswith('text'):
                 try:
                     lines = open(file_path, 'r').readlines()
                 except:
