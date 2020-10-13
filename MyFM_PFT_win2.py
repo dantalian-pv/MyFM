@@ -183,7 +183,11 @@ class App():
             else:
                 self.tree.insert('', 'end', values=tab_values, tags=('w',))
                 self.tree.tag_configure(tagname='w', background=background_with)
-        self.tree.update()
+        child_id = self.tree.get_children()[0]
+        self.tree.selection_set(child_id)
+        self.tree.focus(child_id)
+        self.tree.selection_own()
+        self.tree.focus_set()
 
     def get_dic_in_folder(self):
         dic_dirs = {}
@@ -391,9 +395,6 @@ class App():
 
         m = magic.Magic(mime=True)
         try:
-
-            print(m.from_file(file_path))
-
             if m.from_file(file_path).startswith('text'):
                 try:
                     lines = open(file_path, 'r').readlines()
@@ -407,9 +408,10 @@ class App():
                     img_data = 'size:{} format:{} mode:{}'.format(img.size, img.format, img.mode)
                     self.l_frame4.configure(text=img_data)
                     # img_show = img.resize((400, 300), Image.LANCZOS)
-                # self.frame2.configure(image=img_show.show())
-                # self.frame2.update()
-                # img_show.show()
+                    # img.thumbnail((400, 300))
+                    # img.show()
+                    # self.frame2.configure(image=img.show())
+                    # self.frame2.update()
         except:
             return
 
@@ -433,8 +435,6 @@ class App():
         self.menu.add_command(label='Show/Hide hidden files', command=self.show_or_hide_hidenfile)
         self.menu.add_command(label='----------------------------------')
         self.menu.add_command(label='Delete a file', command=self.delete_file)
-        self.x = event.x
-        self.y = event.y
         self.menu.post(event.x_root, event.y_root)
         # self.menu.configure(font=self.myFont)
 
