@@ -10,7 +10,7 @@ from tkinter import *
 import tkinter.ttk as ttk
 from tkinter import filedialog, messagebox
 import subprocess
-from PIL import Image
+from PIL import Image, ImageTk
 # import imghdr
 import magic
 
@@ -63,8 +63,8 @@ class App():
 
         frame01 = Frame(master)
         frame01.pack(side=LEFT, fill=Y, expand=1)
-        self.frame02 = Text(master)
-        self.frame02.pack(side=LEFT, fill=BOTH, expand=1)
+        self.text = Text(master)
+        self.text.pack(side=LEFT, fill=BOTH, expand=1)
 
         frame1 = LabelFrame(frame01, height=17)  # , bg='Yellow')#, text='path to file')
         frame1.pack(padx=5, pady=5, side=TOP, fill=X)
@@ -375,7 +375,7 @@ class App():
 
     def line_clicked(self, event):
         self.menu_close_com()
-        self.frame02.delete(0.0, END)
+        self.text.delete(0.0, END)
         try:
             f_select = self.tree.item(self.tree.selection(), 'values')[0]
         except:
@@ -406,17 +406,20 @@ class App():
                 except:
                     return
                 for line in lines:
-                    self.frame02.insert(END, line)
+                    self.text.insert(END, line)
             elif m.from_file(file_path).startswith('image'):
                 with open(file_path, 'rb') as f:
                     img = Image.open(f)
                     img_data = 'size:{} format:{} mode:{}'.format(img.size, img.format, img.mode)
                     self.l_frame4.configure(text=img_data)
-                    # img_show = img.resize((400, 300), Image.LANCZOS)
-                    # img.thumbnail((400, 300))
-                    # img.show()
-                    # self.frame2.configure(image=img.show())
-                    # self.frame2.update()
+
+                    img2 = Image.open(file_path)
+                    img2 = img2.resize((400, 400), Image.ANTIALIAS)
+                    img2 = ImageTk.PhotoImage(img2)
+                    self.panel = Label(self.text, image=img2)
+                    self.panel.image = img2
+                    self.panel.place(x=5, y=5)
+            self.text.update()
         except:
             return
 
@@ -450,6 +453,10 @@ class App():
             pass
         try:
             self.help.destroy()
+        except:
+            pass
+        try:
+            self.panel.destroy()
         except:
             pass
         self.master.clipboard_clear()
