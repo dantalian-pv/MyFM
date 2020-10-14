@@ -413,8 +413,13 @@ class App():
                     img_data = 'size:{} format:{} mode:{}'.format(img.size, img.format, img.mode)
                     self.l_frame4.configure(text=img_data)
 
+                (x_image, y_image) = img.size
+                x_win = self.text.winfo_x() - 80
+                y_win = int(x_win * y_image / x_image)
+                siz_win = (x_win, y_win)
+
                 img2 = Image.open(file_path)
-                img2 = img2.resize((400, 400), Image.ANTIALIAS)
+                img2 = img2.resize(siz_win, Image.ANTIALIAS)
                 img2 = ImageTk.PhotoImage(img2)
                 self.img = Label(self.text, image=img2)
                 self.img.image = img2
