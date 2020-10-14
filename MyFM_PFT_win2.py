@@ -413,12 +413,12 @@ class App():
                     img_data = 'size:{} format:{} mode:{}'.format(img.size, img.format, img.mode)
                     self.l_frame4.configure(text=img_data)
 
-                    img2 = Image.open(file_path)
-                    img2 = img2.resize((400, 400), Image.ANTIALIAS)
-                    img2 = ImageTk.PhotoImage(img2)
-                    self.panel = Label(self.text, image=img2)
-                    self.panel.image = img2
-                    self.panel.place(x=5, y=5)
+                img2 = Image.open(file_path)
+                img2 = img2.resize((400, 400), Image.ANTIALIAS)
+                img2 = ImageTk.PhotoImage(img2)
+                self.img = Label(self.text, image=img2)
+                self.img.image = img2
+                self.img.place(x=5, y=5)
             self.text.update()
         except:
             return
@@ -456,7 +456,7 @@ class App():
         except:
             pass
         try:
-            self.panel.destroy()
+            self.img.destroy()
         except:
             pass
         self.master.clipboard_clear()
