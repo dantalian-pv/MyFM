@@ -38,6 +38,7 @@ background_media = '#ccccff'
 # if os.path.exists('/home/divik/1_MyPO'):
 #     file_config = os.path.join('/home/divik/1_MyPO', file_config)
 
+
 def PrintMyName():
     print('My details:')
     print('divik')
@@ -174,16 +175,24 @@ class App():
             tab_mtime, tab_atime = self.get_mtime_file(file_path)
             tab_values = [dic_files[file_path][0], os.path.splitext(dic_files[file_path][0])[1], tab_size, tab_mtime, tab_atime]
             m = magic.Magic(mime=True)
-            if m.from_file(file_path).startswith('text'):
-                self.tree.insert('', 'end', values=tab_values, tags=('txt',))
-                self.tree.tag_configure(tagname='txt', background=background_txt)
-            elif m.from_file(file_path).startswith('video') or m.from_file(file_path).startswith('audio'):
-                self.tree.insert('', 'end', values=tab_values, tags=('media',))
-                self.tree.tag_configure(tagname='media', background=background_media)
-            else:
+            try:
+                if m.from_file(file_path).startswith('text'):
+                    self.tree.insert('', 'end', values=tab_values, tags=('txt',))
+                    self.tree.tag_configure(tagname='txt', background=background_txt)
+                elif m.from_file(file_path).startswith('video') or m.from_file(file_path).startswith('audio'):
+                    self.tree.insert('', 'end', values=tab_values, tags=('media',))
+                    self.tree.tag_configure(tagname='media', background=background_media)
+                else:
+                    self.tree.insert('', 'end', values=tab_values, tags=('w',))
+                    self.tree.tag_configure(tagname='w', background=background_with)
+            except:
                 self.tree.insert('', 'end', values=tab_values, tags=('w',))
                 self.tree.tag_configure(tagname='w', background=background_with)
-        self.tree.update()
+        child_id = self.tree.get_children()[0]
+        self.tree.selection_set(child_id)
+        self.tree.focus(child_id)
+        self.tree.selection_own()
+        self.tree.focus_set()
 
     def get_dic_in_folder(self):
         dic_dirs = {}
@@ -404,9 +413,10 @@ class App():
                     img_data = 'size:{} format:{} mode:{}'.format(img.size, img.format, img.mode)
                     self.l_frame4.configure(text=img_data)
                     # img_show = img.resize((400, 300), Image.LANCZOS)
-                # self.frame2.configure(image=img_show.show())
-                # self.frame2.update()
-                # img_show.show()
+                    # img.thumbnail((400, 300))
+                    # img.show()
+                    # self.frame2.configure(image=img.show())
+                    # self.frame2.update()
         except:
             return
 
@@ -430,8 +440,6 @@ class App():
         self.menu.add_command(label='Show/Hide hidden files', command=self.show_or_hide_hidenfile)
         self.menu.add_command(label='----------------------------------')
         self.menu.add_command(label='Delete a file', command=self.delete_file)
-        self.x = event.x
-        self.y = event.y
         self.menu.post(event.x_root, event.y_root)
         # self.menu.configure(font=self.myFont)
 
@@ -487,13 +495,14 @@ class App():
             self.menu.destroy()
         except:
             pass
-        help_txt = '''MyFM_PFT_win2 - это файловый менеджер с минимальными возможностями
+        help_txt = '''MyFM_PFT_win2 - это файловый менеджер с минимальными возможностями.
+
 Имена папок выделяются серым фоном,
 имена текстовых файлов бледно-голубым фоном,
 имена медиа файлов - синим фоном,
-все остальные файлы - белым фоном
-Имя выбранного файла дублируется в нижнем строке окна ФМ
-Если это ссылка, то в нижней строке указывается полный путь ссылки и полный реальный путь
+все остальные файлы - белым фоном.
+Имя выбранного файла дублируется в нижнем строке окна ФМ.
+Если это ссылка, то указывается полный путь ссылки и полный реальный путь.
 
 Основное управление кнопками мыши:
 Mouse:
@@ -530,6 +539,7 @@ Mouse:
 1. стрелками курсора "вверх" и "вниз" - передвижение по списку файлов
 2. "Escape" - закрыть меню и окно "Help"
 3. "Пробел" - файл запустится приложением по умолчанию
+    Переход по ссылке запрещен, поэтому нет действий при нажатии на пробел
         '''
         # sw = self.master.winfo_screenwidth()
         # sh = self.master.winfo_screenheight()
