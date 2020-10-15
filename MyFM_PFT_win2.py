@@ -13,6 +13,7 @@ import subprocess
 from PIL import Image, ImageTk
 # import imghdr
 import magic
+import sys
 
 w = 710
 h = 470
@@ -365,8 +366,12 @@ class App():
             self.l_frame4.configure(text='')
             return
         elif os.path.isfile(file_path):
+            if sys.platform == 'win32':
+                os.startfile(file_path)
+                return
             try:
                 subprocess.run(['xdg-open', file_path])
+                return
             except:
                 return
         else:
@@ -528,7 +533,7 @@ Mouse:
 4. Двойной клик по имени папки:
     переход в эту папку
 5. Двойной клик по имени файла, файл запустится приложением по умолчанию
-6. Одинарный клик по имени текстового файла (только в полноэкранном режиме):
+6. Одинарный клик по имени текстового файла или image (только в полноэкранном режиме):
     просмотр содержимого файла
     (по списку файлов можно передвигаться при помощи клавиш курсора вверх и вниз)
 7. Клик Правой кнопкой мыши в любом месте ФМ вызовет меню:
