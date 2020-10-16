@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Зависимости:
-# sudo apt install python3-tk python3-magic python3-pil
+# sudo apt install python3-tk python3-magic python3-pil python3-pil.imagetk
 
 import os
 import time
