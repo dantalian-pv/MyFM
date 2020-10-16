@@ -241,6 +241,18 @@ class App():
         # self.save_setup()
         self.insert_in_tree()
 
+    def converter_number_to_gb(self, size):
+        KB = 1024.0
+        MB = KB * KB
+        GB = MB * KB
+        if size >= GB:
+            return '{:,.1f} Gb'.format(size / GB)
+        if size >= MB:
+            return '{:,.1f} Mb'.format(size / MB)
+        if size >= KB:
+            return '{:,.1f} Kb'.format(size / KB)
+        return '{} B'.format(size)
+
     def sort_column_by_image(self):
         pass
 
@@ -263,18 +275,6 @@ class App():
     def sort_column_by_atime(self):
         self.key_sort_by = 'atime'
         self.insert_in_tree()
-
-    def converter_number_to_gb(self, size):
-        KB = 1024.0
-        MB = KB * KB
-        GB = MB * KB
-        if size >= GB:
-            return '{:,.1f} Gb'.format(size / GB)
-        if size >= MB:
-            return '{:,.1f} Mb'.format(size / MB)
-        if size >= KB:
-            return '{:,.1f} Kb'.format(size / KB)
-        return '{} B'.format(size)
 
     def sort_by_name(self, f_path):
         return os.path.basename(f_path).lower()
