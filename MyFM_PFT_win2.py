@@ -30,13 +30,14 @@ date_time = '%Y.%m.%d %H:%M:%S'
 key_sort_by = 'name'
 key_sort_invers = 0
 key_hide_files_hidden = 1
-str_folder_up = ' . . . '
+str_folder_up = '. . .'
 start_switch = '#'
 
 background_dirs = '#cccccc'
 background_txt = '#ccffff'
 background_with = '#ffffff'
 background_media = '#ccccff'
+background_image = '#ffccff'
 
 # file_config = '.myfm_pft_config.txt'
 # if os.path.exists('/home/divik/1_MyPO'):
@@ -149,6 +150,11 @@ class App():
         files_list = list(dic_files.keys())
         dirs_list = self.sort_list_files(dirs_list)
         files_list = self.sort_list_files(files_list)
+        collapsed_icon = PhotoImage(data='R0lGODlhDwANAKIAAAAAAMDAwICAgP//////ADAwMAAAAAAA'
+                                         'ACH5BAEAAAEALAAAAAAPAA0AAAMyGCHM+lAMMoeAT9Jtm5NDKI4Wo'
+                                         'FXcJphhipanq7Kvu8b1dLc5tcuom2foAQQAyKRSmQAAOw==')
+        label = Label(image=collapsed_icon)
+        label.image = collapsed_icon
 
         if self.key_sort_invers:
             dirs_list.reverse()
@@ -165,11 +171,11 @@ class App():
                 continue
             tab_mtime, tab_atime = self.get_mtime_file(dir_path)
             if dic_dirs[dir_path][1] == 'denied':
-                tab_values = [dic_dirs[dir_path][0], '', dic_dirs[dir_path][1], tab_mtime, tab_atime]
+                tab_values = ['    ' + dic_dirs[dir_path][0], '', dic_dirs[dir_path][1], tab_mtime, tab_atime]
             else:
-                tab_values = [dic_dirs[dir_path][0], '{}/{}'.format(dic_dirs[dir_path][2], dic_dirs[dir_path][3]), dic_dirs[dir_path][1], tab_mtime, tab_atime]
-            self.tree.insert('', 'end', values=tab_values, tags=('dirs',))
-            self.tree.tag_configure(tagname='dirs', background=background_dirs)
+                tab_values = ['    ' + dic_dirs[dir_path][0], '{}/{}'.format(dic_dirs[dir_path][2], dic_dirs[dir_path][3]), dic_dirs[dir_path][1], tab_mtime, tab_atime]
+            self.tree.insert('', 'end', image=label.image, values=tab_values, tags=('dirs',))
+            # self.tree.tag_configure(tagname='dirs', background=background_dirs)
         for file_path in files_list:
             if os.path.basename(file_path).startswith('.') and self.key_hide_files_hidden:
                 continue
@@ -186,6 +192,9 @@ class App():
                 elif m.from_file(file_path).startswith('video') or m.from_file(file_path).startswith('audio'):
                     self.tree.insert('', 'end', values=tab_values, tags=('media',))
                     self.tree.tag_configure(tagname='media', background=background_media)
+                elif m.from_file(file_path).startswith('image'):
+                    self.tree.insert('', 'end', values=tab_values, tags=('image',))
+                    self.tree.tag_configure(tagname='image', background=background_image)
                 else:
                     self.tree.insert('', 'end', values=tab_values, tags=('w',))
                     self.tree.tag_configure(tagname='w', background=background_with)
@@ -341,7 +350,7 @@ class App():
     def line_clicked_double(self, event):
         folder_old = self.e_frame1.get()
         try:
-            f_select = self.tree.item(self.tree.selection(), 'values')[0]
+            f_select = self.tree.item(self.tree.selection(), 'values')[0].strip()
         except:
             return
         if f_select == str_folder_up:
@@ -514,13 +523,11 @@ class App():
         except:
             pass
         help_txt = '''MyFM_PFT_win2 - это файловый менеджер с минимальными возможностями.
-Предназначен для быстрой навигации по списку текстовых и фото-видео файлов.
+Предназначен для быстрой навигации по списку текстовых, фото и видео файлов.
 После старта программы, двойным кликом по шапке окна, разверните MyFM_PFT_win2 на весь экран.
 
 Особенности списка файлов:
-Имена папок выделяются серым фоном,
-имена текстовых файлов бледно-голубым фоном,
-имена медиа файлов - синим фоном,
+имена текстовых, фото и медиа файлов выделяются цветным фоном,
 все остальные файлы - белым фоном.
 Имя выбранного файла дублируется в нижнем строке окна ФМ.
 Если это ссылка, то указывается полный путь ссылки и полный реальный путь.
@@ -558,7 +565,7 @@ class App():
 Управление клавишами клавиатуры:
 1. стрелками курсора "вверх" и "вниз" - передвижение по списку файлов
 2. "Escape" - закрыть меню и окно "Help"
-3. "Пробел" - файл запустится приложением по умолчанию
+3. "Пробел" - файл запустится приложением по умолчанию.
     Переход по ссылке запрещен, поэтому нет действий при нажатии на пробел
 4. "Ctrl+H" показать/скрыть скрытые файлы
         '''
