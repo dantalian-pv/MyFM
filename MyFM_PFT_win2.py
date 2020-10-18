@@ -2,7 +2,10 @@
 # -*- coding: utf-8 -*-
 
 # Зависимости:
+# for Debian, Ubuntu
 # sudo apt install python3-tk python3-magic python3-pil python3-pil.imagetk
+# for OpenSuse:
+# sudo zypper install python3-tk python3-magic python3-Pillow python3-Pillow-tk
 
 import os
 import time
@@ -241,6 +244,18 @@ class App():
         # self.save_setup()
         self.insert_in_tree()
 
+    def converter_number_to_gb(self, size):
+        KB = 1024.0
+        MB = KB * KB
+        GB = MB * KB
+        if size >= GB:
+            return '{:,.1f} Gb'.format(size / GB)
+        if size >= MB:
+            return '{:,.1f} Mb'.format(size / MB)
+        if size >= KB:
+            return '{:,.1f} Kb'.format(size / KB)
+        return '{} B'.format(size)
+
     def sort_column_by_image(self):
         pass
 
@@ -263,18 +278,6 @@ class App():
     def sort_column_by_atime(self):
         self.key_sort_by = 'atime'
         self.insert_in_tree()
-
-    def converter_number_to_gb(self, size):
-        KB = 1024.0
-        MB = KB * KB
-        GB = MB * KB
-        if size >= GB:
-            return '{:,.1f} Gb'.format(size / GB)
-        if size >= MB:
-            return '{:,.1f} Mb'.format(size / MB)
-        if size >= KB:
-            return '{:,.1f} Kb'.format(size / KB)
-        return '{} B'.format(size)
 
     def sort_by_name(self, f_path):
         return os.path.basename(f_path).lower()
@@ -413,21 +416,19 @@ class App():
                 for line in lines:
                     self.text.insert(END, line)
             elif m.from_file(file_path).startswith('image'):
-                with open(file_path, 'rb') as f:
-                    img = Image.open(f)
-                    img_data = 'size:{} format:{} mode:{}'.format(img.size, img.format, img.mode)
-                    self.l_frame4.configure(text=img_data)
+                img = Image.open(file_path)
+                img_data = 'size:{} format:{} mode:{}'.format(img.size, img.format, img.mode)
+                self.l_frame4.configure(text=img_data)
 
                 (x_image, y_image) = img.size
                 x_win = self.text.winfo_x() - 80
                 y_win = int(x_win * y_image / x_image)
                 siz_win = (x_win, y_win)
 
-                img2 = Image.open(file_path)
-                img2 = img2.resize(siz_win, Image.ANTIALIAS)
-                img2 = ImageTk.PhotoImage(img2)
-                self.img = Label(self.text, image=img2)
-                self.img.image = img2
+                img_size = img.resize(siz_win, Image.ANTIALIAS)
+                img_size = ImageTk.PhotoImage(img_size)
+                self.img = Label(self.text, image=img_size)
+                self.img.image = img_size
                 self.img.place(x=5, y=5)
             self.text.update()
         except:
