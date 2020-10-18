@@ -171,11 +171,11 @@ class App():
                 continue
             tab_mtime, tab_atime = self.get_mtime_file(dir_path)
             if dic_dirs[dir_path][1] == 'denied':
-                tab_values = ['    ' + dic_dirs[dir_path][0], '', dic_dirs[dir_path][1], tab_mtime, tab_atime]
+                tab_values = [dic_dirs[dir_path][0], '', dic_dirs[dir_path][1], tab_mtime, tab_atime]
             else:
-                tab_values = ['    ' + dic_dirs[dir_path][0], '{}/{}'.format(dic_dirs[dir_path][2], dic_dirs[dir_path][3]), dic_dirs[dir_path][1], tab_mtime, tab_atime]
-            self.tree.insert('', 'end', image=label.image, values=tab_values, tags=('dirs',))
-            # self.tree.tag_configure(tagname='dirs', background=background_dirs)
+                tab_values = [dic_dirs[dir_path][0], '{}/{}'.format(dic_dirs[dir_path][2], dic_dirs[dir_path][3]), dic_dirs[dir_path][1], tab_mtime, tab_atime]
+            self.tree.insert('', 'end', values=tab_values, tags=('dirs',))
+            self.tree.tag_configure(tagname='dirs', background=background_dirs)
         for file_path in files_list:
             if os.path.basename(file_path).startswith('.') and self.key_hide_files_hidden:
                 continue
@@ -523,11 +523,13 @@ class App():
         except:
             pass
         help_txt = '''MyFM_PFT_win2 - это файловый менеджер с минимальными возможностями.
-Предназначен для быстрой навигации по списку текстовых, фото и видео файлов.
+Предназначен для быстрой навигации по списку текстовых и фото-видео файлов.
 После старта программы, двойным кликом по шапке окна, разверните MyFM_PFT_win2 на весь экран.
 
 Особенности списка файлов:
-имена текстовых, фото и медиа файлов выделяются цветным фоном,
+Имена папок выделяются серым фоном,
+имена текстовых файлов бледно-голубым фоном,
+имена медиа файлов - синим фоном,
 все остальные файлы - белым фоном.
 Имя выбранного файла дублируется в нижнем строке окна ФМ.
 Если это ссылка, то указывается полный путь ссылки и полный реальный путь.
@@ -565,7 +567,7 @@ class App():
 Управление клавишами клавиатуры:
 1. стрелками курсора "вверх" и "вниз" - передвижение по списку файлов
 2. "Escape" - закрыть меню и окно "Help"
-3. "Пробел" - файл запустится приложением по умолчанию.
+3. "Пробел" - файл запустится приложением по умолчанию
     Переход по ссылке запрещен, поэтому нет действий при нажатии на пробел
 4. "Ctrl+H" показать/скрыть скрытые файлы
         '''
