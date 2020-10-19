@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# Зависимости:
+# Dependencies:
 # for Debian, Ubuntu
 # sudo apt install python3-tk python3-magic python3-pil python3-pil.imagetk
 # for OpenSuse:
@@ -486,7 +486,7 @@ class App():
         self.menu_close(event='')
 
     def delete_file(self):
-        # Удалить папку если она пустая или удалить файл
+        # Delete folder if empty or delete file
         self.menu_close_com()
         try:
             f_name = f_select = self.tree.item(self.tree.selection(), 'values')[0]
@@ -495,12 +495,12 @@ class App():
         file_path = os.path.join(self.folder_rab, f_name)
         if os.path.isdir(file_path):
             if len(os.listdir(file_path)):
-                messagebox.showerror(title='Ошибка удаления! ', message='Удалять можно только пустые папки!')
+                messagebox.showerror(title='Deletion Error! ', message='Deleting only empty folders is allowed!')
                 return
             else:
                 os.rmdir(file_path)
         else:
-            if messagebox.askyesno(title='Удаление файла! ', message='Вы выбрали удалить файл\n' + f_name + '\nВы уверены?'):
+            if messagebox.askyesno(title='Delete File! ', message='File \n' + f_name + '\nWill be deleted. Confirm?'):
                 os.remove(file_path)
         self.set_key_sort_invers()
 
